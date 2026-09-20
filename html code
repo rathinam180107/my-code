@@ -1,0 +1,738 @@
+SET 1:
+Program 1:
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns={"/NewServlet"})
+public class NewServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+            out.println("<html>");
+            out.println("<body>");
+            out.println("<h2>Get Method</h2>");  
+            out.println("<form method='post' action='NewServlet'>");
+            out.println("Name:<input type='text' name='name'><br>");
+            out.println("Age:<input type='text' name='age'><br>");
+            out.println("<input type='submit' value='submit'>");
+            out.println("</form></body>");
+            out.println("</html>");
+        }
+     @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        String name=request.getParameter("name");
+        String age=request.getParameter("age");
+            out.println("<html>");
+            out.println("<body>");
+            out.println("<h2>Post Method</h2>");  
+            out.println("<p>Name:"+name+"</p>");
+            out.println("<p>age:"+age+"</p>");
+            out.println("</body>");
+            out.println("</html>");
+        
+    }
+
+}
+Output:
+  
+  
+Program 13:
+ 
+import java.io.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
+@WebServlet(urlPatterns = {"/CK"})
+public class CK extends HttpServlet {
+   static int i=1;
+   @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet CK</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet CK at " + request.getContextPath() + "</h1>");
+            Cookie c=new Cookie("visit",String.valueOf(i));
+            response.addCookie(c);
+            int j=Integer.parseInt(c.getValue());
+            if(j==1)
+            {
+                out.println("Welcome user");
+            }
+            else
+            {
+                out.println("You Are Visiting the page: "+j+" Times");
+            }
+            i++;
+            out.println("</body>");
+            out.println("</html>");
+    }   }
+
+Output:
+ 
+
+SET 2:
+Program 2:
+Html:
+<html>
+    <head>
+        <title>Request Dispatcher</title>
+    </head>
+    <body>
+        <h1>Welcome  to Request</h1>
+        <form action="validate" method="Post">
+            Username:<input type="text" name="uname"><br>
+            Password:<input type="password" name="pass"><br>
+            <input type="submit" value="check">
+        </form>
+    </body>
+</html>
+
+Validate.Java:
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns={"/validate"})
+public class validate extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+            String uname=request.getParameter("uname");
+            String pass=request.getParameter("pass");
+            if(pass.equals("servlet")){
+                request.setAttribute("Username",uname);
+                request.setAttribute("Password",pass);
+                RequestDispatcher rd=request.getRequestDispatcher("/welcome");
+                rd.forward(request,response);
+            }
+            else{
+                RequestDispatcher rd=request.getRequestDispatcher("/index.html");
+                rd.include(request, response);
+            out.print("Incorrect Password");
+        }
+    }
+
+}
+
+Welcome.Java:
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns={"/welcome"})
+public class welcome extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        String username=request.getParameter("uname");
+            out.println("<h1>Welcome,"+username+"!</h1>");
+        }
+    }
+Output:
+   
+
+Prg12:
+Index.html
+<html>
+    <body>
+        <h1>Registration form</h1>
+        <form action="RegisterServlet" method="post">
+            Username:<br><input type="text" name="username"/><br><br>
+            Password:<br><input type="password" name="password"/><br><br>
+            Email:<br><input type="email" name="email"/><br><br>
+            Country:<br><input type="text" name="country"/><br><br>
+            <br><input type="submit" value="register"/>
+        </form>
+    </body>
+</html>
+
+RegisterServlet.java
+import java.io.*;
+import java.sql.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns = {"/RegisterServlet"})
+public class RegisterServlet extends HttpServlet {
+    private static final String DB_URL="jdbc:derby://localhost:1527/Sample1";
+    private static final String DB_USERNAME="root";
+    private static final String DB_PASSWORD="root";
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            String a=request.getParameter("username");
+            String b=request.getParameter("password");
+            String c=request.getParameter("email");
+            String d=request.getParameter("country");
+            try{
+                Class.forName("org.apache.derby.jdbc.ClientDriver");
+                Connection con=DriverManager.getConnection(DB_URL,DB_USERNAME,DB_PASSWORD);
+                PreparedStatement ps=con.prepareStatement("insert into test values(?,?,?,?)");
+                ps.setString(1,a);
+                ps.setString(2,b);
+                ps.setString(3,c);
+                ps.setString(4,d);
+                int i=ps.executeUpdate();
+                if(i>0)
+                    out.print("You are successfully registered....");
+            }
+            catch(ClassNotFoundException|SQLException e2){
+                out.println(e2);
+            }
+        }
+    }
+}
+OUTPUT:
+  
+ 
+
+SET 3:
+Program 3:
+Login.jsp
+<html>
+    <head>
+        <title>Login Page</title>
+    </head>
+    <body>
+        <h1>Enter your login credentials</h1>
+        <form action="validate.jsp">
+            <label>Username:</label>
+            <input type="text"name="uname"><br>
+            <label>Password:</label>
+            <input type="password"name="password"><br>
+            <input type="submit"value="SUBMIT">
+        </form>
+    </body>
+</html>
+Validate.jsp
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>validate Page</title>
+    </head>
+    <body>
+        <%!String uid="anu";%>
+        <%!String pass="123";%>
+        <%!String id,password;%>
+        <%id=request.getParameter("uname");%>
+        <%password=request.getParameter("password");%>
+        <%if(uid.equals(id)&&pass.equals(password))
+        {
+            %>
+            <jsp:forward page="welcome.jsp"/>
+            <%
+        }
+        else{
+            %>
+            <jsp:forward page="login.jsp"/>
+            <%
+        }
+        %>
+    </body>
+</html>
+Welcome.jsp
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Welcome Page</title>
+    </head>
+    <body>
+        <%!String id;%>
+        <%id=request.getParameter("uname");%>
+        <h1>Hello <%=id%>, Welcome to the Home Page</h1>
+        <p>PSG college of Arts and Science is a Arts and Science college in Coimbatore,Tamilnadu,India.<br>
+            It was found in 1947 by G.R.Damodran.<br>
+        It was ranked 11th among colleges in India by National Institutional Ranking Framework(NIRF) in 2024</p>
+    </body>
+</html>
+Output:
+     
+
+PROGRAM 10:XML WITH CSS(STUDENT INFO) CSS:
+block{
+display:block;} student{
+display:block; width:250px; background-color:red; margin-top:20px; padding:10px;
+border-radius:10px; color:#ffffff;
+}
+student:hover{
+box-shadow:2px 2px 10px #9999ff; color:#330099;
+}
+address{ display:block;
+}
+students{ display:block; margin:10px;
+}
+heading{ margin:20px;
+ 
+display:block; font-size:32px;
+}
+WEB.XML
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-styleSheet type="text/css" href="newcss.css"?>
+<students>
+<heading>Details</heading>
+<block>
+<student>
+<fname>Navya</fname>
+<lname>Sakthivel</lname>
+<address>Erode,TN</address>
+</student>
+</block>
+<block>
+<student>
+<fname>keerthi</fname>
+<lname>mano</lname>
+<address>Tirupur,TN</address>
+</student>
+</block>
+<block>
+<student>
+<fname>abineya</fname>
+<lname>balu</lname>
+<address>Erode,TN</address>
+</student>
+</block>
+</students>
+ 
+OUTPUT:
+
+
+
+SET 4:
+PROGRAM 4:SESSION
+import java.io.IOException; import java.io.PrintWriter; import java.util.*;
+import javax.servlet.ServletException; import javax.servlet.annotation.WebServlet; import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest; import javax.servlet.http.HttpServletResponse; import javax.servlet.http.HttpSession;
+
+@WebServlet(urlPatterns = {"/SessionDemo"}) public class SessionDemo extends HttpServlet
+{
+@Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+{
+HttpSession session=request.getSession();
+Integer count=(Integer)session.getAttribute("visitCount"); String userID=(String)session.getAttribute("userID"); if(count==null)
+{
+count=1; userID="B.Sc CS";
+session.setAttribute("userID",userID);
+}
+else
+{
+count++;
+}
+ 
+session.setAttribute("visitCount",count); response.setContentType("text/html"); PrintWriter out=response.getWriter(); out.println("<html><body>");
+out.println("<h2>Session Information using http session interface</h2>"); out.println("<p>Session ID:"+session.getId()+"</p>"); out.println("<p>User ID:"+userID+"</p>");
+out.println("<p>Number of Visits:"+count+"</p>");
+out.println("<p>Session Creation Time:"+new Date(session.getCreationTime())+"</p>"); out.println("<p>Last Accessed Time:"+new Date(session.getLastAccessedTime())+"</p>"); out.println("</body></html>");
+
+}
+}
+OUTPUT:
+ 
+
+Program 9:
+Index.html:
+<html>
+<body>
+<h1>Enter your Authentication Details!!</h1>
+<form action="MyServlet1" method="get">
+Employee ID:<input type="text" name="EmpId"/><br/>
+Password: <input type="password" name="userPassword"/><br/>
+<input type="submit" value="submit"/>
+</form>
+</body>
+</html>
+MyServlet1.java:
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+@WebServlet(urlPatterns={"/MyServlet1"})
+public class MyServlet1 extends HttpServlet {
+@Override
+protected void doGet(HttpServletRequest request,HttpServletResponse response) 
+        throws ServletException,IOException{ 
+    try { 
+        response.setContentType ("text/html");
+        try (PrintWriter pwriter = response.getWriter()) {
+            String EmpId=request.getParameter("EmpId");
+            String password=request.getParameter("userPassword");
+            pwriter.print("<h1>Employee entered Details</h1>");
+            pwriter.print("Hello " +EmpId+ "<br>");
+            pwriter.print("\nYour Password is:"+password);
+            Cookie c0=new Cookie("userName",EmpId);
+            Cookie c2=new Cookie("userPassword",password);
+            response.addCookie(c0);
+            response.addCookie(c2);
+            pwriter.print("<br><a href='MyServlet2'>View Details</a>");
+        } 
+    }catch(Exception exp) 
+    { 
+        System.out.println (exp); 
+    }
+}
+}
+MyServlet2.java:
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+@WebServlet(urlPatterns={"/MyServlet2"})
+public class MyServlet2 extends HttpServlet
+{ 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+            try{
+            response.setContentType("text/html");
+                PrintWriter pwriter = response.getWriter();
+                    pwriter.print("<h1>Data Accessed from Created Cookie!!</h1>");
+                    Cookie c[]= request.getCookies();
+                    if(c!=null){
+                        pwriter.println("EmpID:"+c[0].getValue()+"<br>");
+                        pwriter.println("Password:"+c[1].getValue()+"<br>");
+                    
+                }
+                    else{
+                        pwriter.println("No Cookies Found");
+                    }
+          }
+            catch (Exception exp)
+            {
+                System.out.println (exp);
+            }
+}
+}
+Output:
+ 
+ 
+ 
+
+SET 5:
+Program  5
+Login.jsp
+<html>
+    <head>
+        <title>Login Page</title>
+    </head>
+    <body>
+        <h1>Enter your Login credentials</h1>
+        <form action="validate.jsp">
+              Username:<input type="text"name="uname"><br>
+              Password:<input type="password"name="password"><br>
+              <input type="submit" value="SUBMIT">
+              <input type="reset" value="RESET">
+        </form>
+    </body>
+</html>
+
+Validate.jsp
+<html>
+    <head>
+        <title>Validation Page</title>
+    </head>
+    <body>
+        <%!String uid="Kavisha";%>
+        <%!String pass="12345";%>
+        <%!String id,password;%>
+        <%id=request.getParameter("uname");%>
+        <%password=request.getParameter("password");%>
+        <% if(uid.equals(id)&&pass.equals(password))
+        {
+            %>
+            <jsp:forward page="welcome.jsp"/>
+            <%
+        }
+        else
+        {
+            %>
+            <jsp:forward page="error.jsp"/>
+            <%
+        }
+        %>
+    </body>
+</html>
+
+Welcome.jsp
+<html>
+    <head>
+        <title>Welcome Page</title>
+    </head>
+    <body>
+        <%!String id;%>
+        <%id=request.getParameter("uname");%>
+    <center>
+        <h1>Hello <%=id%> Welcome to Home page!</h1>
+    </center>
+    <marquee>Welcome UG and PG First years for the Academics 2026-2027</marquee>
+    <p> PSG collrge of Arts and Science (PSGCAS)in Coimbatore is ranked 10th nationally 
+        in the 'Colleges' category by the National Institutional Ranking Framework (NIRF). 
+        It also holds an A++ grade accreditation from the National Assessment and 
+        Accreditation Council (NAAC).</p>
+    <ul>
+        <li>43 UG Programmes</li>
+        <li>4 B.Voc Programmes</li>
+        <li>27 PG Programmes</li>
+        <li>1 five year integrated PG Programme</li>
+        <li>3 Diplomo Programmes</li>
+        <li>M.Phill and Ph.D Programmes in 25 Disciplines</li>
+        <li>School of commerce(2.75 lakh sq.ft with:
+            <ul>
+                <li>85 classrooms</li>
+                <li>4 computer labs</li>
+                <li>2 conference hall</li>
+            </ul>
+        </li>
+        <li> 10 departmental blocks</li>
+        <li>GRD Auditorium</li>
+        <li>Library hall</li>
+        <li>3 Conference hall</li>
+        <li>Indoor stadium for basketball, Volleyball, Badminton</li>
+        <li>Full Athletic track ground</li>
+        <li>Grounds for Football,Cricket,Tennis and Hockey</li>
+        <ul>
+            <li>Visual Communication</li>
+            <li>Psychology</li>
+            <li>Statistics</li>
+            <li>Hospitality</li>
+        </ul>
+    </li>
+    </ul>
+    </body>
+</html>
+
+
+Error.jsp
+<html>
+    <head>
+        <title>Error Page</title>
+    </head>
+    <body>
+        <h1><%out.println("There is an error, Try again Later");%></h1>
+        <jsp:include page="login.jsp"/>
+    </body>
+</html>
+
+OUTPUT:
+ 
+ 
+
+Program 7:
+Html:
+<html>
+    <head>
+        <title>supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form name="file" method="get" action="fo1">
+            File name:<input type="text" name="file">
+            <input type="submit">
+        </form>
+    </body>
+</html>
+Java:
+import java.io.IOException;
+import java.io.*;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns={"/fo1"})
+public class fo1 extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+         String fn=request.getParameter("file");
+         File f=new File(fn);
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>File Operation</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<b>file operation<b></br>");
+            if(f.exists())
+            {
+                out.println("the file exists<br>");
+                if(f.canRead())
+                {
+                    out.println("the file is readable<br>");
+                }
+                else
+                {
+                    out.println("the file is not readable<br>");
+                }
+                if(f.canWrite())
+                {
+                    out.println("the file is writeable<br>");
+                }
+                else
+                {
+                    out.println("the file is not writeable<br>");
+                }
+                if(f.isFile())
+                {
+                    out.println("it is a file<br>");
+                    out.println("the length of file in bytes:"+f.length());
+                }
+                else if(f.isDirectory())
+                {
+                   out.println("it is a directory<br>"); 
+                }
+                else
+                {
+                    out.println("it is neither a file  nor a directory<br>");
+                }
+            }
+            else
+            {
+                out.println("the file does not exist<br>");
+            }
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+Output:
+  
+SET 6:
+Program 6.Directive Tags:
+Index.html
+<html>
+    <body>
+        <h3>JSP Directives</h3>
+        <p>JSP directives are special messages that give global instructions
+            to the web container during the translation phase when converting
+            a JSP file into a servlet.</p>
+    </body>
+</html>
+
+PageIncludeTags.jsp
+<html>
+    <h3>Page Directives Attributes</h3><br/>
+    <%@page  import="java.util.Date" %>
+    Today is:<%=new java.util.Date()%><br/><br/>
+    <%@page contentType="application/msword" %>
+    <%="This is Page Directive Attribute"%><br/><br/>
+    <%@page info="JSP Page Directives" %>
+    <% out.println(getServletInfo());%><br/><br/>
+    <%@page buffer="5kb" %>
+    <%@page autoFlush="false" %>
+    <%
+    out.flush();
+    %>
+    <%@page errorPage="Iserrorpage.jsp" %>
+    <%=100/0%>
+</html>
+
+
+
+Iserrorpage.jsp
+<html>
+    <body>
+        <%@page isErrorPage="true" %>
+        Sorry an Exception has occurred!<br/>
+        The exception is:<%="Divide By ZeroError"%><br/>
+        <h3><%="Taglib Taglib Directives"%></h3><br/>
+        <c:out value=""${"Welcome!!!"}"/>
+        <h3>Include Directives</h3>
+        <%@include file="index.html" %>
+    </body>
+</html>
+OUTPUT:
+   
+ 
+
+Program 8:
+Html:
+<html>
+    <head>
+        <title> supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form name="file" method="get" action="fo">
+            File name:<input type="text" name="file">
+            <input type="submit">
+        </form>
+    </body>
+</html>
+Java:
+import java.io.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet(urlPatterns={"/fo"})
+public class fo extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+            String fn=request.getParameter("file");
+            BufferedReader r=new BufferedReader(new FileReader(fn));
+            String l;
+            int ln=1;
+            out.println("<html>");
+            out.println("<body>");
+            out.println("<h2>File Contents</h2>");
+            while((l=r.readLine())!=null)
+            {
+                out.println(l+"<br>");
+                ln++;
+            }
+            r.close();
+            out.println("<br><b>Total lines:"+(ln-1)+"</br>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+Output:
+ 
+ 
